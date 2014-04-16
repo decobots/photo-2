@@ -37,7 +37,7 @@ function view(contacts) {
 	CONTACTS=contacts;
 	document.getElementById("cont").innerHTML="";
 	for (var i=0;i<contacts.length;i++){
-		document.getElementById("cont").innerHTML+="<li>"+contacts[i].name.photos+"</li>";
+		document.getElementById("cont").innerHTML+="<li>"+contacts[i].photos+"</li>";
 	    //	document.getElementById("cont").innerHTML+="<br>";
 	}
 	$( "#cont" ).listview( "refresh" );
