@@ -58,7 +58,7 @@ function add(){
 	contact.phoneNumbers=phoneNumbers;
 	var photos=[];
 	photos[0]=new ContactField('base64', IMAGE, true);
-	contact.photos
+	contact.photos=photos;
 	// save to device
 	contact.save(onSuccess2,onError);
 
