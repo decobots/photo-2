@@ -57,7 +57,7 @@ function add(){
 	phoneNumbers[0]=new ContactField('mobile', document.getElementById("tel").value, true);
 	contact.phoneNumbers=phoneNumbers;
 	var photos=[];
-	photos[0]=new ContactField('base64', IMAGE, true);
+	photos[0]=new ContactField('url', IMAGE, true);
 	contact.photos=photos;
 	// save to device
 	contact.save(onSuccess2,onError);
@@ -90,7 +90,7 @@ function onError(contactError) {
 
 function photo(){
 	var cameraOptions={ quality : 100,
-			destinationType : Camera.DestinationType.DATA_URL,
+			destinationType : Camera.DestinationType.FILE_URI;//DATA_URL,
 			sourceType : Camera.PictureSourceType.CAMERA,
 			allowEdit : true,
 			encodingType: Camera.EncodingType.JPEG,
@@ -106,7 +106,7 @@ var IMAGE;
 function cameraSuccess(imageData){
 	IMAGE=imageData;
 	var image = document.getElementById('photoImg');
-	image.src = "data:image/jpeg;base64," + imageData;
+	image.src = imageData;
 }
 
 
