@@ -14,9 +14,80 @@ function init(){
      document.addEventListener("deviceready", onDeviceReady, false);
 }
 function onDeviceReady(){
-	alert("hello");
-    	document.getElementById("photoBut").onclick=photo;
+	document.getElementById("But1").addEventListener('click', function() { list("view"); }, false);
+	document.getElementById("But2").addEventListener('click', function() { add(); }, false);
+	document.getElementById("But3").addEventListener('click', function() { list("dell"); }, false);
+	document.getElementById("photoBut").addEventListener('click', function() { photo(); }, false);
 }
+
+function list(param){
+
+	var options      = new ContactFindOptions();
+	options.filter   = "";
+	options.multiple = true;
+	var fields       = ["displayName", "name"];//["*"];
+	if(param=="view"){
+		navigator.contacts.find(fields, view, onError, options);
+	}
+	if(param=="dell"){
+		navigator.contacts.find(fields, dell, onError, options);
+	}
+}
+function view(contacts) {
+	CONTACTS=contacts;
+	document.getElementById("cont").innerHTML="";
+	for (var i=0;i<contacts.length;i++){
+		document.getElementById("cont").innerHTML+="<li>"+contacts[i].name.formatted+"</li>";
+	    //	document.getElementById("cont").innerHTML+="<br>";
+	}
+	$( "#cont" ).listview( "refresh" );
+}
+var CONTACTS;
+function add(){
+
+	// create a new contact object
+	var contact = navigator.contacts.create();
+//	contact.displayName = "Plumber";
+	contact.nickname = document.getElementById("text3").value;        
+	var name = new ContactName();
+	name.givenName = document.getElementById("text1").value;
+	name.familyName = document.getElementById("text2").value;
+	contact.name = name;
+	var phoneNumbers=[];
+	phoneNumbers[0]=new ContactField('mobile', document.getElementById("tel").value, true);
+	contact.phoneNumbers=phoneNumbers;
+	var photos=[];
+	photos[0]=new ContactField('base64', IMAGE, true);
+	contact.photos
+	// save to device
+	contact.save(onSuccess2,onError);
+
+}
+function dell(contacts){
+	CONTACTS=contacts;
+	document.getElementById("cont2").innerHTML="";
+	    for (var i=0;i<CONTACTS.length;i++){
+	    	document.getElementById("cont2").innerHTML+="<li onclick='dell2("+i+")'>"+CONTACTS[i].name.formatted+"</li>";
+	    }
+	    $( "#cont2" ).listview( "refresh" );
+	    $( "#set" ).collapsibleset( "refresh" );
+}
+
+function dell2(i){
+	navigator.notification.confirm('Удалить контакт?', function(){CONTACTS[i].remove(function() { list("dell"); },onError);}, 'Внимание', ['Да','Нет']);
+}
+
+function onSuccess2(contact) {
+    alert("Save Success");
+    $( "#set2" ).collapsibleset( "disable" );
+    $( "#set1" ).collapsibleset( "enable" );
+    $( "#set" ).collapsibleset( "refresh" );
+}
+
+function onError(contactError) {
+    alert("Error = " + contactError.code);
+}
+
 function photo(){
 	var cameraOptions={ quality : 100,
 			destinationType : Camera.DestinationType.DATA_URL,
@@ -28,18 +99,16 @@ function photo(){
 			correctOrientation:true,
 			cameraDirection: Camera.Direction.FRONT,
 			saveToPhotoAlbum: false };
-	navigator.camera.getPicture(cameraSuccess, cameraError, cameraOptions);
+	navigator.camera.getPicture(cameraSuccess, onError, cameraOptions);
 
 }
+var IMAGE;
 function cameraSuccess(imageData){
-
+	IMAGE="data:image/jpeg;base64," + imageData;
 	var image = document.getElementById('photoImg');
 	image.src = "data:image/jpeg;base64," + imageData;
 }
 
-function cameraError(error){
-	allert(error);
-}
 
 </script>        
 </head>
@@ -48,28 +117,48 @@ function cameraError(error){
 <div data-role="page" data-theme="a" id="p1">
 
 	<div data-role="header">
-		<h1>Photo</h1>
+		<h1>Contacts</h1>
 	</div><!-- /header -->
 
 	<div role="main" class="ui-content">
-        <img id="photoImg"></img>
+
+		<div data-role="collapsibleset" data-theme="a" data-content-theme="a" data-corners="false" id="set">
+		    <div data-role="collapsible" data-collapsed-icon="bullets" id="set1">
+		        <h3 id="But1">Имеющиеся контакты</h3>
+		        <ul data-role="listview"id="cont">
+		        </ul>
+		    </div>
+		    <div data-role="collapsible" data-collapsed-icon="plus" id="set2">
+		        <h3>Добавить контакт</h3>
+			<label for="text1">Имя:</label>
+			<input type="text" name="text-basic" id="text1" value="">
+			<label for="text2">Фамилия:</label>
+			<input type="text" name="text-basic" id="text2" value="">
+			<label for="text3">Кличка:</label>
+			<input type="text" name="text-basic" id="text3" value="">
+			<label for="tel">Телефон:</label>
+			<input type="tel" name="tel" id="tel" value="">
+			<img id="photoImg"></img>
+			<button id="photoBut">Get photo</button>
+			<button id="But2" data-icon="plus">Добавить контакт</button>
+		    </div>
+		    <div data-role="collapsible" data-collapsed-icon="delete" id="set3">
+		        <h3 id="But3">Удалить</h3>
+		   	<ul data-role="listview"id="cont2">
+		        </ul>
+		    </div>
+		    </div>
+		</div>
+
 	</div><!-- /content -->
 
 	<div data-role="footer">
-		<button id="photoBut">Get photo</button>
+
 	</div><!-- /footer -->
 </div><!-- /page -->
 
-<!-- page1==================================================================================================================== -->
-<!-- page1==================================================================================================================== -->
-<!-- page1==================================================================================================================== -->
-<!-- page1==================================================================================================================== -->
-<!-- page1==================================================================================================================== -->
-<!-- page1==================================================================================================================== -->
-<!-- page1==================================================================================================================== -->
-<!-- page1==================================================================================================================== -->
-<!-- page1==================================================================================================================== -->
-<!-- page1==================================================================================================================== -->
-<!-- page1==================================================================================================================== -->
+<!-- page1============================================================================= -->
+<!-- page1============================================================================= -->
+<!-- page1============================================================================= -->
 </body>
 </html>
