@@ -104,7 +104,7 @@ function photo(){
 }
 var IMAGE;
 function cameraSuccess(imageData){
-	IMAGE="data:image/jpeg;base64," + imageData;
+	IMAGE=imageData;
 	var image = document.getElementById('photoImg');
 	image.src = "data:image/jpeg;base64," + imageData;
 }
